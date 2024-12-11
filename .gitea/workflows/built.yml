@@ -18,10 +18,13 @@ jobs:
       - 
         name: Build
         run: npm run build
+      - 
+        name: Cleanup
+        run: rm -rf src/* package-lock.json
       -
         name: Tag
         run: |
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=$(node -p "require('./package.json').version.split('.')[0]")
           if git rev-parse "v$VERSION" >/dev/null 2>&1; then
             echo "Tag v$VERSION already exists. Deleting it."
             git tag -d "v$VERSION"
