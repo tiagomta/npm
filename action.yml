@@ -1,0 +1,26 @@
+name: 'NPM Actions'
+description: 'NPM Actions install, publish, version'
+inputs:
+  context:
+    description: 'Gitea context'
+    default: ${{ toJson(gitea) }}
+  repository:
+    description: 'Repository name with owner. For example, actions/checkout'
+    default: ${{ gitea.repository }}
+  ref:
+    description: 'The branch to update the package.'
+    default: ${{ gitea.event.pull_request.head.ref }}
+  token:
+    description: 'token'
+    default: ${{ gitea.token }}
+  command:
+    description: 'Allowed values: install, publish, version.'
+  args:
+    description: 'Arguments for the command.'
+    default: ''
+outputs:
+  result: 
+    description: 'A boolean value to indicate if a update was successful.'
+runs:
+  using: 'node22'
+  main: 'dist/index.js'

@@ -1,0 +1,16 @@
+{
+  "name": "npm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --platform=node --outfile=dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/exec": "^1.1.1",
+    "esbuild": "^0.24.0"
+  }
+}
