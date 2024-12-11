@@ -25,11 +25,6 @@ jobs:
         name: Tag
         run: |
           VERSION=$(node -p "require('./package.json').version.split('.')[0]")
-          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-            echo "Tag v$VERSION already exists. Deleting it."
-            git tag -d "v$VERSION"
-            git push --delete origin "v$VERSION"
-          fi
           git config user.email "devops@vistta.org"
           git config user.name "devops"
           git commit -m "v$VERSION" -a
