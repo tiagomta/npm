@@ -4,19 +4,13 @@ inputs:
   context:
     description: 'Git Context'
     default: ${{ toJson(github) }}
-  repository:
-    description: 'Repository name with owner. For example, actions/npm'
-    default: ${{ github.repository }}
-  ref:
-    description: 'The branch to update the package.'
-    default: ${{ github.event.pull_request.head.ref }}
   token:
     description: 'NPM Token'
   command:
     description: 'Allowed values: install, publish, tag.'
 outputs:
   result: 
-    description: 'A boolean value to indicate if a update was successful.'
+    description: ''
 runs:
   using: 'node20'
   main: 'index.js'
