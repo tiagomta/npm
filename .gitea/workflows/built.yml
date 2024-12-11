@@ -28,6 +28,8 @@ jobs:
           git config user.email "devops@vistta.org"
           git config user.name "devops"
           git add .
-          git tag "v$VERSION"
+          git commit -m "v$VERSION"
+          git tag -f "v$VERSION"
+          git push origin --delete "v$VERSION" || true
           git push origin "v$VERSION"
           echo "Tagged v$VERSION"
