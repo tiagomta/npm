@@ -1,13 +1,23 @@
 import * as core from "@actions/core";
-import { exec } from "@actions/exec";
-import fs from "node:fs";
-import { URL } from "node:url";
+import { parse } from "./utils.js";
+import publish from "./publish.js";
 
-try {
-  const context = JSON.parse(core.getInput("context"));
-  const command = core.getInput("command");
-  console.log(command);
-  core.setOutput("result", true);
-} catch (error) {
-  core.setFailed(error.message);
+const commands = { publish };
+
+async function run() {
+    try {
+        const [[command, ...args], options] = parse(core.getInput("command").trim());
+        globalThis.context = JSON.parse(core.getInput("context"));
+        globalThis.repository = core.getInput("repository");
+        globalThis.ref = core.getInput("ref");
+        globalThis.token = core.getInput("token");
+        if (!commands[command]) throw new Error(`Unknown command: ${command}`);
+        const result = commands[command](options, ...args);
+        if (result instanceof Promise) await result;
+        core.setOutput("result", result);
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
+
+run();

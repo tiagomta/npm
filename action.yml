@@ -1,23 +1,19 @@
 name: 'NPM Actions'
-description: 'NPM Actions install, publish, version'
+description: 'NPM Actions install, publish, tag'
 inputs:
   context:
-    description: 'Gitea context'
-    default: ${{ toJson(gitea) }}
+    description: 'Git Context'
+    default: ${{ toJson(github) }}
   repository:
-    description: 'Repository name with owner. For example, actions/checkout'
-    default: ${{ gitea.repository }}
+    description: 'Repository name with owner. For example, actions/npm'
+    default: ${{ github.repository }}
   ref:
     description: 'The branch to update the package.'
-    default: ${{ gitea.event.pull_request.head.ref }}
+    default: ${{ github.event.pull_request.head.ref }}
   token:
-    description: 'token'
-    default: ${{ gitea.token }}
+    description: 'NPM Token'
   command:
-    description: 'Allowed values: install, publish, version.'
-  args:
-    description: 'Arguments for the command.'
-    default: ''
+    description: 'Allowed values: install, publish, tag.'
 outputs:
   result: 
     description: 'A boolean value to indicate if a update was successful.'
