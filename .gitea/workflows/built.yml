@@ -27,7 +27,7 @@ jobs:
           VERSION=$(node -p "require('./package.json').version.split('.')[0]")
           git config user.email "devops@vistta.org"
           git config user.name "devops"
-          git commit -m "v$VERSION" -a
+          git add .
           git tag "v$VERSION"
           git push origin "v$VERSION"
           echo "Tagged v$VERSION"
