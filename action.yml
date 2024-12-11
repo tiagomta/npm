@@ -22,5 +22,5 @@ outputs:
   result: 
     description: 'A boolean value to indicate if a update was successful.'
 runs:
-  using: 'node22'
+  using: 'node20'
   main: 'dist/index.js'
