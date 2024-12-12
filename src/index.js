@@ -8,8 +8,9 @@ const commands = { install, publish, version };
 
 async function run() {
     try {
+        const directory = core.getInput("working-directory");
+        if (directory) process.chdir(directory);
         const [[command, ...args], options] = parse(core.getInput("command").trim());
-        console.log(core.getInput('working-directory'));
         globalThis.context = JSON.parse(core.getInput("context"));
         globalThis.token = core.getInput("token");
         if (!commands[command]) throw new Error(`Unknown command: ${command}`);
