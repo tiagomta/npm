@@ -7,7 +7,7 @@ inputs:
   token:
     description: 'NPM Token'
   command:
-    description: 'Allowed values: install, publish, tag.'
+    description: 'Allowed values: install, publish, version.'
 outputs:
   result: 
     description: ''

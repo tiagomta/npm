@@ -2,9 +2,9 @@ import * as core from "@actions/core";
 import { parse } from "./utils.js";
 import install from "./install.js";
 import publish from "./publish.js";
-import tag from "./tag.js";
+import version from "./version.js";
 
-const commands = { install, publish, tag };
+const commands = { install, publish, version };
 
 async function run() {
     try {
