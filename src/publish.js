@@ -1,3 +1,4 @@
+import { exec } from "@actions/exec";
 
 async function main(options, ...args) {
     const scope = options.scope ? `@${options.scope}/registry` : "registry";
