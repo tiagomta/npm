@@ -13,6 +13,7 @@ async function main(options, ...args) {
     await exec("git", tagArgs);
     if (options.replace) await exec("git", ["push", "origin", "--delete", "v" + version]);
     await exec("git", pushArgs);
+    return "v" + version;
 }
 
 export default main;
