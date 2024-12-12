@@ -1,9 +1,7 @@
 import { exec } from "@actions/exec";
-import fs from "node:fs";
 
 async function main(options, ...args) {
-    console.log(fs.readdirSync("."));
-    console.log(context);
+    console.log(core.getInput('working-directory'));
     const scope = options.scope ? `@${options.scope}:registry` : "registry";
     const registry = options.registry ? options.registry : "https://registry.npmjs.org";
     await exec("npm", ["config", "set", scope, registry]);
