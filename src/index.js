@@ -9,6 +9,7 @@ const commands = { install, publish, version };
 async function run() {
     try {
         const [[command, ...args], options] = parse(core.getInput("command").trim());
+        console.log(core.getInput('working-directory'));
         globalThis.context = JSON.parse(core.getInput("context"));
         globalThis.token = core.getInput("token");
         if (!commands[command]) throw new Error(`Unknown command: ${command}`);

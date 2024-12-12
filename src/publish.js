@@ -1,7 +1,6 @@
 import { exec } from "@actions/exec";
 
 async function main(options, ...args) {
-    console.log(core.getInput('working-directory'));
     const scope = options.scope ? `@${options.scope}:registry` : "registry";
     const registry = options.registry ? options.registry : "https://registry.npmjs.org";
     await exec("npm", ["config", "set", scope, registry]);
