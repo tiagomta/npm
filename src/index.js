@@ -15,8 +15,8 @@ async function run() {
         globalThis.token = core.getInput("token");
         if (!commands[command]) throw new Error(`Unknown command: ${command}`);
         const result = commands[command](options, ...args);
-        if (result instanceof Promise) await result;
-        core.setOutput("result", result);
+        if (result instanceof Promise) core.setOutput("result", await result);
+        else core.setOutput("result", result);
     } catch (error) {
         core.setFailed(error.message);
     }
