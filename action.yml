@@ -4,8 +4,11 @@ inputs:
   context:
     description: 'Git Context'
     default: ${{ toJson(github) }}
+  working-directory:
+    description: 'Process directory'
   token:
     description: 'NPM Token'
+        const directory = core.getInput("working-directory");
   command:
     description: 'Allowed values: install, publish, version.'
 outputs:
