@@ -23,7 +23,7 @@ async function main(options, action, type) {
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
         pkg.version = inc(pkg.version, type);
-        await fs.promises.writeFile("package.json", JSON.stringify(packageObj, null, 2), "utf-8");
+        await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
         await exec("git", [
           "commit",
           "-a",
