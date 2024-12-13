@@ -19,11 +19,10 @@ async function main(options, action, type) {
         return version;
     }
     if (action === "increment") {
+        console.log("Incrementing version to", type);
         if (!type) throw new Error("No version type specified");
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
-        type = type.replace("Project/", "");
-        console.log("Incrementing version to", type);
         pkg.version = inc(pkg.version, type);
         await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
         await exec("git", [
