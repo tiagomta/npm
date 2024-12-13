@@ -19,7 +19,6 @@ async function main(options, action, type) {
         return version;
     }
     if (action === "increment") {
-        console.log("Incrementing version to", type);
         if (!type) throw new Error("No version type specified");
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
