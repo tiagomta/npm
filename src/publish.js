@@ -9,6 +9,7 @@ async function main(options, ...args) {
     if (token) await exec("npm", ["config", "set", "--", `${registry.replace(/^https?:/,"")}:_authToken`, token]);
     const publishArgs = ["publish"];
     if (registry === PUBLIC_REGISTRY) publishArgs.push("--access", "public");
+    if (options.beta) publishArgs.push("--tag", "beta");
     await exec("npm", publishArgs);
 }
 
