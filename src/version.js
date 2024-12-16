@@ -1,5 +1,4 @@
 import { exec } from "@actions/exec";
-import { inc } from "semver";
 import fs from "node:fs";
 
 async function main(options, action) {
@@ -21,9 +20,7 @@ async function main(options, action) {
     if (["major", "minor", "patch", "beta", "alpha", "snapshot"].includes(action)) {
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
-        if (["beta", "alpha", "snapshot"].includes(action))
-            pkg.version = inc(pkg.version, "prerelease", action);
-        else pkg.version = inc(pkg.version, action);
+        pkg.version = inc(pkg.version, action);
         await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
         await exec("git", [
           "commit",
@@ -37,3 +34,23 @@ async function main(options, action) {
 }
 
 export default main;
+
+function inc(version, type) {
+    let extra;
+    if (version.indexOf("-") != -1)
+        [version, extra] = version.split("-");
+    let [major, minor, patch] = version.split(".");
+    if (type == "major") version = (parseInt(major) + 1) + ".0.0";
+    else if (type == "minor") version = major + "." + (parseInt(minor) + 1) + ".0";
+    else if (type == "patch") version = major + "." + minor + "." + (parseInt(patch) + 1);
+    else if (type == "beta" || type == "alpha" || type == "snapshot") {
+        if (extra && !extra.startsWith(type)) throw new Error(`Cannot increment a non-${type} version`);
+        if (!extra) version = version + "-" + type + ".1";
+        else {
+            let [type, n] = extra.split(".");
+            n = parseInt(n) + 1;
+            version = version + "-" + type + "." + n;
+        }
+    }
+    return version;
+}
