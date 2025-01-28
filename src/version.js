@@ -17,10 +17,10 @@ async function main(options, action) {
         await exec("git", pushArgs);
         return version;
     }
-    if (["major", "minor", "patch", "beta", "alpha", "snapshot"].includes(action)) {
+    if (["major", "minor", "patch", "beta", "alpha", "snapshot"].includes(action.toLowerCase())) {
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
-        pkg.version = inc(pkg.version, action);
+        pkg.version = inc(pkg.version, action.toLowerCase());
         await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
         await exec("git", [
           "commit",
