@@ -28,7 +28,7 @@ async function main(options, action) {
           "-m",
           `[Devops] Update Package (${pkg.version})`,
         ]);
-        await exec("git", ["push", "origin", "HEAD:" + context.event.pull_request.head.ref, "--force"]);
+        await exec("git", ["push", "--force"]);
         return pkg.version;
     }
 }
