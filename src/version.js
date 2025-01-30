@@ -1,6 +1,8 @@
 import { exec } from "@actions/exec";
 import fs from "node:fs";
 
+const VALID_VERSION = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/;
+
 async function main(options, action) {
     const pkg = JSON.parse(
         await fs.promises.readFile("package.json", "utf-8")
@@ -18,9 +20,25 @@ async function main(options, action) {
         return version;
     }
     if (["major", "minor", "patch", "beta", "alpha", "snapshot"].includes(action.toLowerCase())) {
+        if (options.dryRun) return inc(pkg.version, action.toLowerCase());
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
         pkg.version = inc(pkg.version, action.toLowerCase());
+        await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
+        await exec("git", [
+          "commit",
+          "-a",
+          "-m",
+          `[Devops] Update Package (${pkg.version})`,
+        ]);
+        await exec("git", ["push", "--force"]);
+        return pkg.version;
+    }
+    if (VALID_VERSION.test(version)) {
+        if (options.dryRun) return action;
+        if (options.email) await exec("git", ["config", "user.email", options.email]);
+        if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
+        pkg.version = action;
         await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
         await exec("git", [
           "commit",
@@ -52,5 +70,10 @@ function inc(version, type) {
             version = version + "-" + type + "." + n;
         }
     }
+    return version;
+}
+
+function validate(version) {
+    if (!VALID_VERSION.test(version)) return
     return version;
 }
