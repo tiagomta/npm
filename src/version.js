@@ -3,7 +3,7 @@ import fs from "node:fs";
 
 const VALID_VERSION = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/;
 
-async function main(options, action) {
+async function main(options, action, value) {
     const pkg = JSON.parse(
         await fs.promises.readFile("package.json", "utf-8")
     );
@@ -20,10 +20,10 @@ async function main(options, action) {
         return version;
     }
     if (["major", "minor", "patch", "beta", "alpha", "snapshot"].includes(action.toLowerCase())) {
-        if (options.dryRun) return inc(pkg.version, action.toLowerCase());
+        if (options.dryRun) return update(pkg.version, action.toLowerCase(), value);
         if (options.email) await exec("git", ["config", "user.email", options.email]);
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
-        pkg.version = inc(pkg.version, action.toLowerCase());
+        pkg.version = update(pkg.version, action.toLowerCase(), value);
         await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
         if (options.commit) await exec("git", [
           "commit",
@@ -53,7 +53,7 @@ async function main(options, action) {
 
 export default main;
 
-function inc(version, type) {
+function update(version, type, suffix) {
     let extra;
     if (version.indexOf("-") != -1)
         [version, extra] = version.split("-");
@@ -63,17 +63,13 @@ function inc(version, type) {
     else if (type == "patch") version = major + "." + minor + "." + (parseInt(patch) + 1);
     else if (type == "beta" || type == "alpha" || type == "snapshot") {
         if (extra && !extra.startsWith(type)) throw new Error(`Cannot increment a non-${type} version`);
-        if (!extra) version = version + "-" + type + ".1";
+        if (suffix) version = version + "-" + type.toUpperCase() + "-" + suffix;
+        else if (!extra) version = version + "-" + type.toUpperCase() + "-1";
         else {
-            let [type, n] = extra.split(".");
+            let [type, n] = extra.split("-");
             n = parseInt(n) + 1;
-            version = version + "-" + type + "." + n;
+            version = version + "-" + type.toUpperCase() + "-" + n;
         }
     }
-    return version;
-}
-
-function validate(version) {
-    if (!VALID_VERSION.test(version)) return
     return version;
 }
