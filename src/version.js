@@ -40,7 +40,8 @@ async function main(options, action, value) {
         if (options.name || options.email) await exec("git", ["config", "user.name", options.name || options.email.split("@")[0]]);
         pkg.version = action;
         await fs.promises.writeFile("package.json", JSON.stringify(pkg, null, 2), "utf-8");
-        if (options.commit) await exec("git", [
+        if (!options.commit) return pkg.version;
+        await exec("git", [
           "commit",
           "-a",
           "-m",
