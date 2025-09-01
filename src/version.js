@@ -81,14 +81,22 @@ async function main(options, action, value) {
 
 export default main;
 
-function update(version, type, value) {
+function update(version, type, id) {
   if (version.indexOf(/\+-/) != -1) version = version.split(/\+-/)[0];
   let [major, minor, patch] = version.split(".");
-  if (type == "major") version = parseInt(major) + 1 + ".0.0";
-  else if (type == "minor")
+  if (type == "major" || type === "premajor")
+    version = parseInt(major) + 1 + ".0.0";
+  else if (type == "minor" || type === "preminor")
     version = major + "." + (parseInt(minor) + 1) + ".0";
-  else if (type == "patch")
+  else if (type == "patch" || type === "prepatch" || type === "prerelease")
     version = major + "." + minor + "." + (parseInt(patch) + 1);
-  else if (type == "custom") version = version + value;
+  if (
+    type == "custom" ||
+    type === "premajor" ||
+    type === "preminor" ||
+    type === "prepatch" ||
+    type === "prerelease"
+  )
+    version = version + "-" + id;
   return version;
 }
