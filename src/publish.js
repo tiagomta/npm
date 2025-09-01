@@ -4,10 +4,10 @@ import fs from "node:fs";
 const PUBLIC_REGISTRY = "https://registry.npmjs.org/";
 
 async function main(options, ...args) {
-  const scope = options.scope ? `@${options.scope}:registry` : "registry";
-  const registry = options.registry ? options.registry : PUBLIC_REGISTRY;
-  await exec("npm", ["config", "set", scope, registry]);
-  if (token)
+  if (token) {
+    const scope = options.scope ? `@${options.scope}:registry` : "registry";
+    const registry = options.registry ? options.registry : PUBLIC_REGISTRY;
+    await exec("npm", ["config", "set", scope, registry]);
     await exec("npm", [
       "config",
       "set",
@@ -15,6 +15,7 @@ async function main(options, ...args) {
       `${registry.replace(/^https?:/, "")}:_authToken`,
       token,
     ]);
+  }
   const publishArgs = ["publish", "--tag", "latest"];
   if (registry === PUBLIC_REGISTRY) publishArgs.push("--access", "public");
   if (options.workspace) publishArgs.push("--workspace", options.workspace);
