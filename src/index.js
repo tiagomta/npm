@@ -9,9 +9,7 @@ const commands = { install, publish, version };
 async function run() {
   try {
     const directory = core.getInput("working-directory");
-    console.log(`Working directory: ${process.cwd()}`);
     if (directory) process.chdir(directory);
-    console.log(`Working directory: ${process.cwd()}`);
     const [[command, ...args], options] = parse(
       core.getInput("command").trim()
     );
