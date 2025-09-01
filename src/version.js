@@ -25,7 +25,17 @@ async function main(options, action, value) {
     await exec("git", pushArgs);
     return version;
   }
-  if (["major", "minor", "patch", "custom"].includes(action.toLowerCase())) {
+  if (
+    [
+      "major",
+      "minor",
+      "patch",
+      "premajor",
+      "preminor",
+      "prepatch",
+      "prerelease",
+    ].includes(action.toLowerCase())
+  ) {
     if (options.dryRun) return update(pkg.version, action.toLowerCase(), value);
     if (options.email)
       await exec("git", ["config", "user.email", options.email]);
@@ -91,7 +101,6 @@ function update(version, type, id) {
   else if (type == "patch" || type === "prepatch" || type === "prerelease")
     version = major + "." + minor + "." + (parseInt(patch) + 1);
   if (
-    type == "custom" ||
     type === "premajor" ||
     type === "preminor" ||
     type === "prepatch" ||
