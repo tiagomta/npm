@@ -18,6 +18,7 @@ async function main(options, ...args) {
   const publishArgs = ["publish", "--tag", "latest"];
   if (registry === PUBLIC_REGISTRY) publishArgs.push("--access", "public");
   if (options.workspace) publishArgs.push("--workspace", options.workspace);
+  console.log(publishArgs);
   await exec("npm", publishArgs);
   if (options.tag || options.tag !== "latest") {
     const pkg = JSON.parse(await fs.promises.readFile("package.json", "utf-8"));
